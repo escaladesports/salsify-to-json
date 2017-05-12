@@ -1,4 +1,5 @@
 'use strict'
+require('dotenv').config({ silent: true })
 module.exports = (config, cb, options = {}) => {
 	if(!config.salsifyJson){
 		if(typeof cb === 'function') cb()
@@ -46,13 +47,15 @@ module.exports = (config, cb, options = {}) => {
 			imageminGifsicle()
 		]
 	}
+	const cwd = process.cwd()
 	const salsify = require('./salsify-download')(options.apiKey)
-	const schema = require(`${options.srcPath}/_salsify-schema`)
+	const schema = require(`${cwd}/${options.srcPath}/_salsify-schema`)
 	let salsifyLastRun
 	try{
-		salsifyLastRun = require(`${options.srcPath}/salsify-last-run.json`)
+		salsifyLastRun = require(`${cwd}/${options.srcPath}/salsify-last-run.json`)
 	}
 	catch(e){
+		console.log(e)
 		salsifyLastRun = {
 			imageProperties: '',
 			processImages: '',
@@ -312,7 +315,7 @@ module.exports = (config, cb, options = {}) => {
 					else{
 						ignoreImgFiles[prodId] = true
 						try{
-							imageFiles[prodId] = require(`${options.publicPath}/${options.jsonPath}/images/${prodId.toLowerCase()}.json`)
+							imageFiles[prodId] = require(`${cwd}/${options.publicPath}/${options.jsonPath}/images/${prodId.toLowerCase()}.json`)
 						}
 						catch(e){
 							imageFiles[prodId] = {}
@@ -417,7 +420,7 @@ module.exports = (config, cb, options = {}) => {
 			const imgObj = arr[i]
 			promises.push(new Promise((resolve, reject) => {
 				console.log(`Saving: ${imgObj.path}`)
-				fs.outputFile(`${options.publicPath}${imgObj.path}`, imgObj.buffer, err => {
+				fs.outputFile(`${cwd}/${options.publicPath}${imgObj.path}`, imgObj.buffer, err => {
 					if(err) reject(err)
 					else{
 						console.log(`Saved: ${imgObj.path}`)
@@ -507,7 +510,7 @@ module.exports = (config, cb, options = {}) => {
 			const replacement = productFiles[i]
 			let original = {}
 			try{
-				original = require(`${options.publicPath}/${options.jsonPath}/product/${productFiles[i].lowerId}.json`)
+				original = require(`${cwd}/${options.publicPath}/${options.jsonPath}/product/${productFiles[i].lowerId}.json`)
 			}
 			catch(e){}
 			// Check for differences
@@ -522,7 +525,7 @@ module.exports = (config, cb, options = {}) => {
 			const replacement = categoryFiles[i]
 			let original = {}
 			try{
-				original = require(`${options.publicPath}/${options.jsonPath}/category/${categoryFiles[i].id}.json`)
+				original = require(`${cwd}/${options.publicPath}/${options.jsonPath}/category/${categoryFiles[i].id}.json`)
 			}
 			catch(e){}
 			let found = false
@@ -553,7 +556,7 @@ module.exports = (config, cb, options = {}) => {
 		// Write product data to file
 		for(let i in productFiles){
 			promises.push(new Promise((resolve, reject) => {
-				fs.outputJson(`${options.publicPath}/${options.jsonPath}/product/${productFiles[i].lowerId}.json`, productFiles[i], { spaces: options.jsonSpaces }, err => {
+				fs.outputJson(`${cwd}/${options.publicPath}/${options.jsonPath}/product/${productFiles[i].lowerId}.json`, productFiles[i], { spaces: options.jsonSpaces }, err => {
 					if(err) reject(err)
 					else resolve()
 				})
@@ -564,7 +567,7 @@ module.exports = (config, cb, options = {}) => {
 		for(let i in imageFiles){
 			if(!(i in ignoreImgFiles)){
 				promises.push(new Promise((resolve, reject) => {
-					fs.outputJson(`${options.publicPath}/${options.jsonPath}/images/${productFiles[i].lowerId}.json`, imageFiles[i], { spaces: options.jsonSpaces }, err => {
+					fs.outputJson(`${cwd}/${options.publicPath}/${options.jsonPath}/images/${productFiles[i].lowerId}.json`, imageFiles[i], { spaces: options.jsonSpaces }, err => {
 						if(err) reject(err)
 						else resolve()
 					})
@@ -576,7 +579,7 @@ module.exports = (config, cb, options = {}) => {
 		for(let cat in categoryFiles){
 			const catStr = cat.toLowerCase()
 			promises.push(new Promise((resolve, reject) => {
-				fs.outputJson(`${options.publicPath}/${options.jsonPath}/category/${catStr}.json`, categoryFiles[cat], { spaces: options.jsonSpaces }, err => {
+				fs.outputJson(`${cwd}/${options.publicPath}/${options.jsonPath}/category/${catStr}.json`, categoryFiles[cat], { spaces: options.jsonSpaces }, err => {
 					if(err) reject(err)
 					else resolve()
 				})
@@ -590,7 +593,7 @@ module.exports = (config, cb, options = {}) => {
 			categoriesFile[i] = categoryFiles[id]
 		}
 		promises.push(new Promise((resolve, reject) => {
-			fs.outputJson(`${options.publicPath}/${options.jsonPath}/categories.json`, categoriesFile, { spaces: options.jsonSpaces }, err => {
+			fs.outputJson(`${cwd}/${options.publicPath}/${options.jsonPath}/categories.json`, categoriesFile, { spaces: options.jsonSpaces }, err => {
 				if(err) reject(err)
 				else resolve()
 			})
@@ -599,7 +602,7 @@ module.exports = (config, cb, options = {}) => {
 
 		// Log image info
 		promises.push(new Promise((resolve, reject) => {
-			fs.outputJson(`${options.srcPath}/salsify-last-run.json`, salsifyLastRun, { spaces: options.jsonSpaces }, err => {
+			fs.outputJson(`${cwd}/${options.srcPath}/salsify-last-run.json`, salsifyLastRun, { spaces: options.jsonSpaces }, err => {
 				if(err) reject(err)
 				else resolve()
 			})
