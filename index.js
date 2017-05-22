@@ -361,8 +361,8 @@ module.exports = (config, cb, options = {}) => {
 	// Processes a single image, splits into multiple versions
 	function processImage(origImgObj){
 		const promises = []
-		for(let i in schema.processImages){
-			const imgSchema = schema.processImages[i]
+		for(let i in schema.processImages[origImgObj.type]){
+			const imgSchema = schema.processImages[origImgObj.type][i]
 			imgSchema.name = i
 			const imgObj = Object.assign({}, origImgObj)
 			imgObjs.push(imgObj)
@@ -378,7 +378,8 @@ module.exports = (config, cb, options = {}) => {
 						.toFormat(imgSchema.filetype === 'jpg' ? 'jpeg' : imgSchema.filetype)
 				}
 				if(!imgSchema.crop){
-					img = img.background(imgSchema.background || 'white')
+					img = img
+						.background(imgSchema.background || 'white')
 						.embed()
 				}
 				img.toBuffer(toBuffer)

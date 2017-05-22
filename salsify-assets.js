@@ -3,14 +3,12 @@
 // Return asset URLs
 module.exports = (ids, obj, timestamp) => {
 	let assets = obj['salsify:digital_assets']
-	let l = assets.length
-	let i
+	if(typeof ids === 'string') ids = [ ids ]
 	const assetL = ids.length
 	const output = []
 	let found = 0
-	let index
-	for(i = 0; i < l; i++){
-		index = ids.indexOf(assets[i]['salsify:id'])
+	for(let i = 0; i < assets.length; i++){
+		let index = ids.indexOf(assets[i]['salsify:id'])
 		if(index !== -1){
 			if(timestamp){
 				output[index] = {
