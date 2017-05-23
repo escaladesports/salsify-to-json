@@ -371,12 +371,14 @@ module.exports = (config, cb, options = {}) => {
 				let img = sharp(imgObj.buffer)
 					.resize(imgSchema.width, imgSchema.height)
 
+				/*
 				if(imgSchema.filetype){
 					img = img
 						.background('white')
 						.flatten()
 						.toFormat(imgSchema.filetype === 'jpg' ? 'jpeg' : imgSchema.filetype)
 				}
+				*/
 				if(!imgSchema.crop){
 					img = img
 						.background(imgSchema.background || 'white')
