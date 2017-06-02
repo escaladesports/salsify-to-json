@@ -280,7 +280,7 @@ module.exports = (config, cb, options = {}) => {
 		}
 
 		let p = Promise.resolve()
-		const timestamp = imgLinks[prodId][imgType][imgId].timestamp
+		const timestamp = new Date().getTime()
 
 		// Loop through products
 		for(let prodId in imgLinks){
