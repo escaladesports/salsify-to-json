@@ -280,6 +280,7 @@ module.exports = (config, cb, options = {}) => {
 		}
 
 		let p = Promise.resolve()
+		const timestamp = imgLinks[prodId][imgType][imgId].timestamp
 
 		// Loop through products
 		for(let prodId in imgLinks){
@@ -289,7 +290,6 @@ module.exports = (config, cb, options = {}) => {
 				if(!imgLinks[prodId][imgType]) continue
 				for(let imgId = imgLinks[prodId][imgType].length; imgId--;){
 					const link = imgLinks[prodId][imgType][imgId].url
-					const timestamp = imgLinks[prodId][imgType][imgId].timestamp
 					if(
 						processAll ||								// If we are processing everything
 						!(link in salsifyLastRun[imgType]) ||		// If image has never been downloaded
