@@ -4,7 +4,7 @@ const fs = require('fs-extra')
 
 function fetchProduct(id, obj){
 	return new Promise((resolve, reject) => {
-		obj.log('Fetching ${id} from Salsify...')
+		obj.log(`Fetching ${id} from Salsify...`)
 		request({
 			url: `https://app.salsify.com/api/v1/products/${id}`,
 			method: 'get',
@@ -36,7 +36,7 @@ function fetchProduct(id, obj){
 
 function saveProduct(id, obj){
 	return new Promise((resolve, reject) => {
-		obj.log('Saving Salsify data for ${id}...')
+		obj.log(`Saving Salsify data for ${id}...`)
 		let name = obj.lowerCase ? id.toLowerCase() : id
 		fs.outputJson(`${obj.out}/${name}.json`, obj.data[id], {
 				spaces: obj.pretty ? '\t' : ''
