@@ -88,6 +88,9 @@ module.exports = obj => {
 			pretty: true,
 			log: console.log
 		}, obj)
+		if(!obj.apiKey){
+			return obj.log('No Salsify API key found.')
+		}
 		obj.log('Salsify to JSON...')
 		fetchAllProducts(obj)
 			.then(saveAllProducts)
