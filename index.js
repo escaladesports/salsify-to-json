@@ -5,8 +5,9 @@ const fs = require('fs-extra')
 function fetchProduct(id, obj){
 	return new Promise((resolve, reject) => {
 		obj.log(`Fetching ${id} from Salsify...`)
+		const url = `https://app.salsify.com/api/v1/products/${id}`
 		request({
-			url: `https://app.salsify.com/api/v1/products/${id}`,
+			url: url,
 			method: 'get',
 			headers: {
 				Authorization: `Bearer ${obj.apiKey}`
@@ -16,7 +17,7 @@ function fetchProduct(id, obj){
 				reject(new Error(err))
 			}
 			else if(res.statusCode !== 200){
-				reject(new Error(`Unexpected status code: ${res.statusCode}`))
+				reject(new Error(`Unexpected status code, ${res.statusCode}, on url: ${url}`))
 			}
 			else{
 				try{
